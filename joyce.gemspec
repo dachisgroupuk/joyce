@@ -4,8 +4,8 @@ require File.expand_path('../lib/joyce/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors       = ["Alessandro Morandi"]
   gem.email         = ["alessandro@dachisgroup.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.description   = %q{A gem to manage activity streams in Rails}
+  gem.summary       = %q{Manage activity streams}
   gem.homepage      = ""
 
   gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
@@ -14,4 +14,7 @@ Gem::Specification.new do |gem|
   gem.name          = "joyce"
   gem.require_paths = ["lib"]
   gem.version       = Joyce::VERSION
+  
+  gem.add_development_dependency('rake', '~> 0.8')
+  gem.add_development_dependency('rspec', '~> 2.8')
 end

@@ -1,6 +1,6 @@
 # Joyce
 
-TODO: Write a gem description
+A gem to manage activity streams (consciousness optional).
 
 ## Installation
 
