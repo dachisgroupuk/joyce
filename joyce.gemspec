@@ -18,4 +18,6 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency('rake', '~> 0.8')
   gem.add_development_dependency('rspec', '~> 2.8')
   gem.add_development_dependency('sqlite3')
+  
+  gem.add_runtime_dependency('activerecord')
 end
