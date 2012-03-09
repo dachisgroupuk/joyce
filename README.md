@@ -18,7 +18,17 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Basic usage:
+
+    Joyce.publish_activity(:actor => actor, :verb => verb, :obj => object)
+
+The parameter names conform to the [JSON Activity Streams 1.0](http://activitystrea.ms/specs/json/1.0/) specification (`:obj` is used instead of `:object`, which is a reserved word).
+
+## Testing
+
+Execute:
+
+    $ rspec
 
 ## Contributing
 
