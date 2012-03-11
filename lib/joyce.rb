@@ -1,6 +1,11 @@
 require "joyce/version"
 require 'joyce/activity'
 require 'joyce/stream'
+require 'joyce/behaviour'
+
+if defined?(ActiveRecord)
+  ActiveRecord::Base.send(:include, Joyce::Behaviour)
+end
 
 module Joyce
   def self.publish_activity(args)

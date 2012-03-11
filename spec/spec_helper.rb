@@ -17,7 +17,7 @@ AddJoyceTables.up
 
 # Fixtures
 class Thing < ActiveRecord::Base
-  
+  act_as_joyce
 end
 ActiveRecord::Base.connection.execute("DROP TABLE IF EXISTS `things`")
 ActiveRecord::Base.connection.create_table(:things) do |t|
