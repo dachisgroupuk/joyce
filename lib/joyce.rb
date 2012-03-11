@@ -1,5 +1,6 @@
 require "joyce/version"
 require 'joyce/activity'
+require 'joyce/stream'
 
 module Joyce
   def self.publish_activity(args)
