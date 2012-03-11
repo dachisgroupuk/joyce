@@ -6,5 +6,7 @@ module Joyce
     
     belongs_to :actor, :polymorphic => true
     belongs_to :obj, :polymorphic => true
+    
+    validates_presence_of :actor, :verb
   end
 end
