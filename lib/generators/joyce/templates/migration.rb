@@ -15,10 +15,17 @@ class AddJoyceTables < ActiveRecord::Migration
       t.string   'owner_type', :null => false
       t.timestamps
     end
+    
+    create_table 'joyce_activities_streams', :id => false, :force => true do |t|
+      t.integer  'activity_id', :null => false
+      t.integer  'stream_id', :null => false
+      t.timestamps
+    end
   end
 
   def self.down
     drop_table 'joyce_activities'
     drop_table 'joyce_streams'
+    drop_table 'joyce_activities_streams'
   end
 end
