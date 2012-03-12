@@ -12,5 +12,14 @@ module Joyce
     def self.default(params)
       new params
     end
+    
+    def self.find_or_create_by_owner(owner)
+      stream = where(:owner_id => owner.id, :owner_type => owner.class).first
+      if stream.nil?
+        create(:owner => owner)
+      else
+        stream
+      end
+    end
   end
 end
