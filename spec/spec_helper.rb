@@ -10,6 +10,7 @@ require 'joyce'
 require 'generators/joyce/templates/migration'
 require 'database_cleaner'
 require 'ruby-debug'
+require 'timecop'
 
 
 # Migrations

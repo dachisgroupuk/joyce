@@ -11,6 +11,8 @@ module Joyce
     
     validates_presence_of :actor, :verb
     
+    extend Joyce::Scopes
+    
     def get_targets(name=:target)
       ActivityTarget.where(:name => name, :activity_id => id).map{ |at| at.target }
     end

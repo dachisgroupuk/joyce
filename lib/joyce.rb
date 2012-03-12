@@ -1,4 +1,5 @@
 require "joyce/version"
+require 'joyce/scopes'
 require 'joyce/activity'
 require 'joyce/stream'
 require 'joyce/activity_target'

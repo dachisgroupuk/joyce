@@ -48,4 +48,17 @@ describe Joyce::Activity do
     
   end
   
+  describe "scopes" do
+    describe "#since" do
+      before do
+        Timecop.travel(2.weeks.ago) do
+          @activity_to_drop = Joyce::Activity.create(:actor => Thing.new, :verb => "did")
+        end
+        @activity_to_show = Joyce::Activity.create(:actor => Thing.new, :verb => "did")
+      end
+      
+      it { Joyce::Activity.since(1.week.ago).should == [@activity_to_show] }
+    end
+  end
+  
 end
