@@ -19,7 +19,6 @@ class AddJoyceTables < ActiveRecord::Migration
     create_table 'joyce_activities_streams', :id => false, :force => true do |t|
       t.integer  'activity_id', :null => false
       t.integer  'stream_id', :null => false
-      t.timestamps
     end
   end
 

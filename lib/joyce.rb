@@ -12,6 +12,12 @@ module Joyce
     raise ArgumentError.new("An actor must be specified for the Activity") unless args[:actor]
     raise ArgumentError.new("A verb must be specified for the Activity") unless args[:verb]
     
-    Activity.create(:actor => args[:actor], :verb => args[:verb], :obj => args[:obj])
+    activity = Activity.create(:actor => args[:actor], :verb => args[:verb], :obj => args[:obj])
+    
+    actor = args[:actor]
+    actor_stream = Joyce::Stream.find_or_create_by_owner(actor)
+    actor_stream.activities << activity
+    
+    activity
   end
 end

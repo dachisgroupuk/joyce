@@ -6,7 +6,7 @@ module Joyce
     
     module ClassMethods
       def act_as_joyce
-        has_many :streams
+        has_many :streams, :class_name => Joyce::Stream, :as => :owner
       end
     end
   end
