@@ -22,6 +22,7 @@ class AddJoyceTables < ActiveRecord::Migration
     end
     
     create_table 'joyce_activities_targets', :id => false, :force => true do |t|
+      t.string   'name'
       t.integer  'activity_id', :null => false
       t.integer  'target_id', :null => false
       t.string   'target_type', :null => false

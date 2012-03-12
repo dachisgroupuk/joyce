@@ -10,5 +10,17 @@ module Joyce
     has_and_belongs_to_many :targets, :join_table => "joyce_activities_targets"
     
     validates_presence_of :actor, :verb
+    
+    def get_targets(name=:target)
+      ActivityTarget.where(:name => name, :activity_id => id).map{ |at| at.target }
+    end
+    
+    def set_targets(targets)
+      raise ArgumentError.new("Parameter for set_targets should be a hash of type {:name => target}") unless targets.is_a?(Hash)
+      
+      targets.each do |name, target|
+        ActivityTarget.create(:name => name, :activity => self, :target => target)
+      end
+    end
   end
 end

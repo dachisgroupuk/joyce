@@ -1,6 +1,7 @@
 require "joyce/version"
 require 'joyce/activity'
 require 'joyce/stream'
+require 'joyce/activity_target'
 require 'joyce/behaviour'
 require 'joyce/behaviour/owner'
 
