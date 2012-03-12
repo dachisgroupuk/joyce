@@ -73,6 +73,20 @@ describe Joyce do
         end
       end
     end
+    
+    context "with a target" do
+      before { @target = Thing.create(:name => "Cyclopes Island") }
+      subject { Joyce.publish_activity(:actor => @actor, :verb => @verb, :target => @target) }
+      
+      it "should save the target" do
+        subject.get_targets.should include(@target)
+      end
+      
+      it "should add activity to the default target stream" do
+        activity = subject
+        Joyce::Stream.where(:owner_id => @target.id, :name => nil).first.activities.should include(activity)
+      end
+    end
   end
   
 end

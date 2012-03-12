@@ -14,13 +14,19 @@ module Joyce
     raise ArgumentError.new("An actor must be specified for the Activity") unless args[:actor]
     raise ArgumentError.new("A verb must be specified for the Activity") unless args[:verb]
     
-    actor = args[:actor]
-    obj = args[:obj]
+    # Pop all the known params from args until only targets remain
+    actor = args.delete(:actor)
+    verb = args.delete(:verb)
+    obj = args.delete(:obj)
     
-    activity = Activity.create(:actor => actor, :verb => args[:verb], :obj => obj)
+    activity = Activity.create(:actor => actor, :verb => verb, :obj => obj)
+    activity.set_targets(args)
     
     add_to_stream_owned_by(actor, activity)
     add_to_stream_owned_by(obj, activity) unless obj.nil?
+    args.each do |name, target|
+      add_to_stream_owned_by(target, activity)
+    end
     
     activity
   end
