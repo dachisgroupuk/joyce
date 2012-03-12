@@ -50,11 +50,22 @@ describe Joyce do
           subject
         }.to change{ Joyce::Stream.where(:owner_id => @actor.id, :name => nil).count }.by(1)
       end
+      
+      it "should create the default object stream" do
+        expect{
+          subject
+        }.to change{ Joyce::Stream.where(:owner_id => @object.id, :name => nil).count }.by(1)
+      end
     end
     
     it "should add activity to the default actor stream" do
       activity = subject
       Joyce::Stream.where(:owner_id => @actor.id, :name => nil).first.activities.should include(activity)
+    end
+    
+    it "should add activity to the default object stream" do
+      activity = subject
+      Joyce::Stream.where(:owner_id => @object.id, :name => nil).first.activities.should include(activity)
     end
   end
   
