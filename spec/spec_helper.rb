@@ -26,6 +26,15 @@ ActiveRecord::Base.connection.create_table(:things) do |t|
     t.timestamps
 end
 
+class Person < ActiveRecord::Base
+  act_as_joyce
+end
+ActiveRecord::Base.connection.execute("DROP TABLE IF EXISTS `people`")
+ActiveRecord::Base.connection.create_table(:people) do |t|
+    t.string :name
+    t.timestamps
+end
+
 RSpec.configure do |config|
   # Prettyfying
   config.color_enabled  = true
