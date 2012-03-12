@@ -20,6 +20,12 @@ class AddJoyceTables < ActiveRecord::Migration
       t.integer  'activity_id', :null => false
       t.integer  'stream_id', :null => false
     end
+    
+    create_table 'joyce_activities_targets', :id => false, :force => true do |t|
+      t.integer  'activity_id', :null => false
+      t.integer  'target_id', :null => false
+      t.string   'target_type', :null => false
+    end
   end
 
   def self.down
