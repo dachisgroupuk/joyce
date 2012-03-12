@@ -16,10 +16,10 @@ module Joyce
     actor = args[:actor]
     obj = args[:obj]
     
-    activity = Activity.create(:actor => args[:actor], :verb => args[:verb], :obj => args[:obj])
+    activity = Activity.create(:actor => actor, :verb => args[:verb], :obj => obj)
     
     add_to_stream_owned_by(actor, activity)
-    add_to_stream_owned_by(obj, activity)
+    add_to_stream_owned_by(obj, activity) unless obj.nil?
     
     activity
   end
