@@ -11,7 +11,8 @@ require 'generators/joyce/templates/migration'
 require 'database_cleaner'
 require 'ruby-debug'
 require 'timecop'
-
+require 'factory_girl'
+FactoryGirl.find_definitions
 
 # Migrations
 ActiveRecord::Base.establish_connection(:adapter => 'sqlite3', :database => 'development.db')
@@ -54,4 +55,7 @@ RSpec.configure do |config|
   config.after(:each) do
     DatabaseCleaner.clean
   end
+  
+  # Enable factory girl shorthand (e.g. use create(:model) instead of FactoryGirl.create(:model))
+  config.include FactoryGirl::Syntax::Methods
 end

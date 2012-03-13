@@ -4,7 +4,7 @@ describe Joyce do
   
   describe ".publish_activity" do
     before do
-      @actor = Thing.create(:name => "Ulysses")
+      @actor = create(:thing)
       @verb = "fooled"
     end
     
@@ -53,7 +53,7 @@ describe Joyce do
     end
     
     context "with an object" do
-      before { @object = Thing.create(:name => "Polyphemus") }
+      before { @object = create(:thing) }
       subject { Joyce.publish_activity(:actor => @actor, :verb => @verb, :obj => @object) }
       
       it "should save the object" do
@@ -75,7 +75,7 @@ describe Joyce do
     end
     
     context "with a target" do
-      before { @target = Thing.create(:name => "Cyclopes Island") }
+      before { @target = create(:thing) }
       subject { Joyce.publish_activity(:actor => @actor, :verb => @verb, :target => @target) }
       
       it "should save the target" do

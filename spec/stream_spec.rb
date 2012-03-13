@@ -8,7 +8,7 @@ describe Joyce::Stream do
   end
   
   describe ".default" do
-    let(:params) { { :owner => Thing.create } }
+    let(:params) { { :owner => create(:thing) } }
     
     it "should create a new stream" do
       Joyce::Stream.should_receive(:new).with(params)
@@ -17,7 +17,7 @@ describe Joyce::Stream do
   end
   
   describe ".find_or_create_by_owner" do
-    let(:owner) { Thing.create }
+    let(:owner) { create(:thing) }
     
     context "when stream does not exist" do
       it "should create stream" do

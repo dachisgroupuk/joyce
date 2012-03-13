@@ -16,14 +16,14 @@ describe Joyce::Activity do
   end
   
   describe "#get_targets" do
-    let(:activity) { Joyce::Activity.create(:actor => Thing.new, :verb => "did") }
+    let(:activity) { create(:activity) }
     it { activity.get_targets.should be_empty }
     
     context "when targets exist" do
       before do
-        @default_target = Thing.new
+        @default_target = build(:thing)
         Joyce::ActivityTarget.create(:activity => activity, :target => @default_target)
-        @test_target = Thing.new
+        @test_target = build(:thing)
         Joyce::ActivityTarget.create(:activity => activity, :target => @test_target, :name => :test)
       end
       
@@ -33,8 +33,8 @@ describe Joyce::Activity do
   end
   
   describe "#set_targets" do
-    let(:activity) { Joyce::Activity.create(:actor => Thing.new, :verb => "did") }
-    let(:thing) { Thing.new }
+    let(:activity) { create(:activity) }
+    let(:thing) { build(:thing) }
     
     context "when param is not a hash" do
       it { expect{ activity.set_targets(thing) }.to raise_error ArgumentError }
@@ -52,9 +52,9 @@ describe Joyce::Activity do
     describe "#since" do
       before do
         Timecop.travel(2.weeks.ago) do
-          @activity_to_drop = Joyce::Activity.create(:actor => Thing.new, :verb => "did")
+          @activity_to_drop = create(:activity)
         end
-        @activity_to_show = Joyce::Activity.create(:actor => Thing.new, :verb => "did")
+        @activity_to_show = create(:activity)
       end
       
       it { Joyce::Activity.since(1.week.ago).should == [@activity_to_show] }

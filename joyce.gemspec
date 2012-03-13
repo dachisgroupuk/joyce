@@ -23,6 +23,7 @@ Gem::Specification.new do |gem|
   #  ruby-debug working with Ruby 1.9.3-p0
   gem.add_development_dependency('ruby-debug19')
   gem.add_development_dependency('timecop')
+  gem.add_development_dependency('factory_girl')
   
   gem.add_runtime_dependency('activerecord')
 end
