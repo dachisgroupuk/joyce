@@ -1,31 +1,27 @@
 class AddJoyceTables < ActiveRecord::Migration
   def self.up
     create_table 'joyce_activities', :force => true do |t|
-      t.string   'verb', :null => false
-      t.integer  'actor_id', :null => false
-      t.string   'actor_type', :null => false
-      t.integer  'obj_id'
-      t.string   'obj_type'
+      t.string      'verb', :null => false
+      t.references  :actor, :polymorphic => true, :null => false
+      t.references  :obj, :polymorphic => true
       t.timestamps
     end
     
     create_table 'joyce_streams', :force => true do |t|
-      t.string   'name'
-      t.integer  'owner_id', :null => false
-      t.string   'owner_type', :null => false
+      t.string      'name'
+      t.references  :owner, :polymorphic => true, :null => false
       t.timestamps
     end
     
     create_table 'joyce_activities_streams', :id => false, :force => true do |t|
-      t.integer  'activity_id', :null => false
-      t.integer  'stream_id', :null => false
+      t.references  :activity, :null => false
+      t.references  :stream, :null => false
     end
     
     create_table 'joyce_activities_targets', :id => false, :force => true do |t|
-      t.string   'name'
-      t.integer  'activity_id', :null => false
-      t.integer  'target_id', :null => false
-      t.string   'target_type', :null => false
+      t.string      'name'
+      t.references  :activity, :null => false
+      t.references  :target, :polymorphic => true, :null => false
     end
   end
 
@@ -33,5 +29,6 @@ class AddJoyceTables < ActiveRecord::Migration
     drop_table 'joyce_activities'
     drop_table 'joyce_streams'
     drop_table 'joyce_activities_streams'
+    drop_table 'joyce_activities_targets'
   end
 end
