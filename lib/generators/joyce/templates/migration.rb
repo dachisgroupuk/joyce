@@ -23,6 +23,13 @@ class AddJoyceTables < ActiveRecord::Migration
       t.references  :activity, :null => false
       t.references  :target, :polymorphic => true, :null => false
     end
+    
+    create_table 'joyce_streams_subscribers', :force => true do |t|
+      t.references  :subscriber, :polymorphic => true, :null => false
+      t.references  :stream, :null => false
+      t.datetime    'started_at', :null => false
+      t.datetime    'ended_at'
+    end
   end
 
   def self.down
@@ -30,5 +37,6 @@ class AddJoyceTables < ActiveRecord::Migration
     drop_table 'joyce_streams'
     drop_table 'joyce_activities_streams'
     drop_table 'joyce_activities_targets'
+    drop_table 'joyce_streams_subscribers'
   end
 end

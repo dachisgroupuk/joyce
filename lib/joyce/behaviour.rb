@@ -10,6 +10,7 @@ module Joyce
         has_and_belongs_to_many :activities, :join_table => "joyce_activities_targets"
         
         include Joyce::Behaviour::Owner
+        include Joyce::Behaviour::Subscriber
       end
     end
   end

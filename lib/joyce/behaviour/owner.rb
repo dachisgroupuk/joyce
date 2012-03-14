@@ -2,8 +2,8 @@ module Joyce
   module Behaviour
     
     module Owner
-      def self.included receiver
-        receiver.extend ClassMethods
+      def self.included(base)
+        base.extend ClassMethods
       end
       
       def activity_stream

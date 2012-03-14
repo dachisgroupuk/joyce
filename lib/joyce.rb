@@ -5,6 +5,8 @@ require 'joyce/stream'
 require 'joyce/activity_target'
 require 'joyce/behaviour'
 require 'joyce/behaviour/owner'
+require 'joyce/behaviour/subscriber'
+require 'joyce/stream_subscriber'
 
 if defined?(ActiveRecord)
   ActiveRecord::Base.send(:include, Joyce::Behaviour)
