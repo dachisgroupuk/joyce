@@ -20,7 +20,7 @@ AddJoyceTables.up
 
 # Fixtures
 class Thing < ActiveRecord::Base
-  act_as_joyce
+  acts_as_joyce
 end
 ActiveRecord::Base.connection.execute("DROP TABLE IF EXISTS `things`")
 ActiveRecord::Base.connection.create_table(:things) do |t|
@@ -29,7 +29,7 @@ ActiveRecord::Base.connection.create_table(:things) do |t|
 end
 
 class Person < ActiveRecord::Base
-  act_as_joyce
+  acts_as_joyce
 end
 ActiveRecord::Base.connection.execute("DROP TABLE IF EXISTS `people`")
 ActiveRecord::Base.connection.create_table(:people) do |t|

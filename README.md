@@ -18,10 +18,10 @@ Or install it yourself as:
 
 ## Configuration
 
-Just add `act_as_joyce` in your models to enable activity streaming for them. E.g.:
+Just add `acts_as_joyce` in your models to enable activity streaming for them. E.g.:
 
     class Person < Activerecord::Base
-      act_as_joyce
+      acts_as_joyce
     end
 
 This will add to the model methods such as `activity_stream`.
@@ -56,7 +56,7 @@ By default, the activity will be added to the stream for each model instance pas
 
 ### Activity stream
 
-Once a model has been enabled by specifying `act_as_joyce`, it will have an activity stream.
+Once a model has been enabled by specifying `acts_as_joyce`, it will have an activity stream.
 
 You can get all the activities for a specific model instance. E.g.:
 
