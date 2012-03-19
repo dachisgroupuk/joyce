@@ -25,6 +25,14 @@ module Joyce
         stream_subscriber.ended_at = Time.now
         stream_subscriber.save
       end
+      
+      def subscribed_activity_stream
+        Joyce::Activity
+          .joins("JOIN joyce_activities_streams ON joyce_activities.id = joyce_activities_streams.activity_id")
+          .joins("JOIN joyce_streams_subscribers ON joyce_streams_subscribers.stream_id = joyce_activities_streams.stream_id")
+          .where("joyce_streams_subscribers" => {:subscriber_id => self.id, :subscriber_type => self.class})
+          .order("joyce_activities.created_at DESC")
+      end
 
 
       private

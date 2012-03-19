@@ -108,4 +108,46 @@ describe Joyce::Behaviour::Subscriber do
     end
   end
   
+  describe "#subscribed_activity_stream" do
+    context "when not subscribed" do
+      it { subscriber.subscribed_activity_stream.should be_empty }
+    end
+    
+    context "when subscribed to multiple streams" do
+      let(:thing) { create(:thing) }
+      let(:person) { create(:person) }
+      before do
+        @thing_stream = Joyce::Stream.create(:owner => thing)
+        @person_stream = Joyce::Stream.create(:owner => person)
+        subscriber.subscribe_to(@thing_stream)
+        subscriber.subscribe_to(@person_stream)
+      end
+      
+      it { subscriber.subscribed_activity_stream.should be_empty }
+      
+      context "when one of the streams has activities" do
+        before do
+          @activity = create(:activity)
+          @thing_stream.activities << @activity
+        end
+        
+        it { subscriber.subscribed_activity_stream.should == [@activity] }
+      end
+      
+      context "when all streams have activities" do
+        before do
+          @new_activity = create(:activity)
+          @person_stream.activities << @new_activity
+          
+          Timecop.travel(1.week.ago) do
+            @old_activity = create(:activity)
+            @thing_stream.activities << @old_activity
+          end
+        end
+        
+        it { subscriber.subscribed_activity_stream.should == [@new_activity, @old_activity] }
+      end
+    end
+  end
+  
 end
