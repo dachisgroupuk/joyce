@@ -114,38 +114,84 @@ describe Joyce::Behaviour::Subscriber do
     end
     
     context "when subscribed to multiple streams" do
-      let(:thing) { create(:thing) }
-      let(:person) { create(:person) }
       before do
-        @thing_stream = Joyce::Stream.create(:owner => thing)
-        @person_stream = Joyce::Stream.create(:owner => person)
-        subscriber.subscribe_to(@thing_stream)
-        subscriber.subscribe_to(@person_stream)
+        @thing_stream = Joyce::Stream.create(:owner => create(:thing))
+        @person_stream = Joyce::Stream.create(:owner => create(:person))
+        Timecop.travel(1.month.ago) do
+          subscriber.subscribe_to(@thing_stream)
+          subscriber.subscribe_to(@person_stream)
+        end
       end
       
       it { subscriber.subscribed_activity_stream.should be_empty }
       
-      context "when one of the streams has activities" do
+      context "when one of the streams has activities from after subscribing" do
         before do
           @activity = create(:activity)
           @thing_stream.activities << @activity
         end
         
-        it { subscriber.subscribed_activity_stream.should == [@activity] }
+        it "should show activities from the stream" do
+          subscriber.subscribed_activity_stream.should == [@activity]
+        end
       end
       
-      context "when all streams have activities" do
+      context "when all streams have activities from after subscribing" do
         before do
           @new_activity = create(:activity)
           @person_stream.activities << @new_activity
           
-          Timecop.travel(1.week.ago) do
+          Timecop.travel(2.weeks.ago) do
             @old_activity = create(:activity)
             @thing_stream.activities << @old_activity
           end
         end
         
-        it { subscriber.subscribed_activity_stream.should == [@new_activity, @old_activity] }
+        it "should show activities from all streams" do
+          subscriber.subscribed_activity_stream.should == [@new_activity, @old_activity]
+        end
+        
+        context "when unsubscribing" do
+          before do
+            Timecop.travel(1.week.ago) do
+              subscriber.unsubscribe_from(@person_stream)
+              subscriber.unsubscribe_from(@thing_stream)
+            end
+          end
+          
+          it "should show activities from before unsubscribing" do
+            subscriber.subscribed_activity_stream.should include(@old_activity)
+          end
+          
+          it "should not show activities from after unsubscribing" do
+            subscriber.subscribed_activity_stream.should_not include(@new_activity)
+          end
+          
+          context "when subscribing again" do
+            before do
+              Timecop.travel(1.day.ago) do
+                subscriber.subscribe_to(@person_stream)
+              end
+            end
+            
+            it "should show activities from after subscribing again" do
+              subscriber.subscribed_activity_stream.should include(@new_activity)
+            end
+          end
+        end
+        
+        context "with an activity from before subscribing" do
+          before do
+            Timecop.travel(1.year.ago) do
+              @oldest_activity = create(:activity)
+              @thing_stream.activities << @oldest_activity
+            end
+          end
+          
+          it "should not show activities from before subscribing" do
+            subscriber.subscribed_activity_stream.should_not include(@oldest_activity)
+          end
+        end
       end
     end
   end

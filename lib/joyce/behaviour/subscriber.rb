@@ -28,9 +28,11 @@ module Joyce
       
       def subscribed_activity_stream
         Joyce::Activity
-          .joins("JOIN joyce_activities_streams ON joyce_activities.id = joyce_activities_streams.activity_id")
-          .joins("JOIN joyce_streams_subscribers ON joyce_streams_subscribers.stream_id = joyce_activities_streams.stream_id")
-          .where("joyce_streams_subscribers" => {:subscriber_id => self.id, :subscriber_type => self.class})
+          .joins("JOIN joyce_activities_streams AS jas ON joyce_activities.id = jas.activity_id")
+          .joins("JOIN joyce_streams_subscribers AS jss ON jss.stream_id = jas.stream_id")
+          .where("jss" => {:subscriber_id => self.id, :subscriber_type => self.class})
+          .where("joyce_activities.created_at <= jss.ended_at OR jss.ended_at IS NULL")
+          .where("joyce_activities.created_at >= jss.started_at")
           .order("joyce_activities.created_at DESC")
       end
 
