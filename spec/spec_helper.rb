@@ -37,6 +37,8 @@ ActiveRecord::Base.connection.create_table(:people) do |t|
     t.timestamps
 end
 
+class Acted < Joyce::Verb; end
+
 RSpec.configure do |config|
   # Prettyfying
   config.color_enabled  = true

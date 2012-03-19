@@ -24,5 +24,15 @@ module Joyce
         ActivityTarget.create(:name => name, :activity => self, :target => target)
       end
     end
+    
+    def verb=(value)
+      verb_value = value.nil? ? nil : value.to_s
+      write_attribute(:verb, verb_value)
+    end
+    
+    def verb
+      verb_value = read_attribute(:verb)
+      verb_value.nil? ? nil : verb_value.constantize
+    end
   end
 end

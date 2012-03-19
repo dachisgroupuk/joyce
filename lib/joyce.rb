@@ -7,6 +7,7 @@ require 'joyce/behaviour'
 require 'joyce/behaviour/owner'
 require 'joyce/behaviour/subscriber'
 require 'joyce/stream_subscriber'
+require 'joyce/verb'
 
 if defined?(ActiveRecord)
   ActiveRecord::Base.send(:include, Joyce::Behaviour)
@@ -16,6 +17,7 @@ module Joyce
   def self.publish_activity(args)
     raise ArgumentError.new("An actor must be specified for the Activity") unless args[:actor]
     raise ArgumentError.new("A verb must be specified for the Activity") unless args[:verb]
+    raise ArgumentError.new("Verb must be a Joyce::Verb") unless args[:verb].is_a?(Class) && args[:verb] < Joyce::Verb
     
     # Pop all the known params from args until only targets remain
     actor = args.delete(:actor)

@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :activity, :class => Joyce::Activity do
     association :actor, :factory => :thing
-    verb "did"
+    verb Joyce::Verb
   end
   
   factory :thing do

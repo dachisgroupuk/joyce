@@ -5,7 +5,7 @@ describe Joyce::Activity do
   describe "validation" do
     context "with missing parameters" do
       [
-        {:verb => "fooled"},
+        {:verb => Acted},
         {:actor => Thing.create(:name => "Ulysses")}
       ].each do |params|
         context "with #{params}" do
@@ -58,6 +58,38 @@ describe Joyce::Activity do
       end
       
       it { Joyce::Activity.since(1.week.ago).should == [@activity_to_show] }
+    end
+  end
+  
+  describe "#verb=" do
+    before{ @activity = Joyce::Activity.new }
+    
+    context "with a class" do
+      before{ @activity.verb = Object }
+      
+      it{ @activity.read_attribute(:verb).should == "Object" }
+    end
+    
+    context "with nil" do
+      before{ @activity.verb = nil }
+      
+      it { @activity.read_attribute(:verb).should be_nil }
+    end
+  end
+  
+  describe "#verb" do
+    before{ @activity = Joyce::Activity.new }
+    
+    context "with a class" do
+      before{ @activity.verb = Object }
+      
+      it{ @activity.verb.should == Object }
+    end
+    
+    context "with nil" do
+      before{ @activity.verb = nil }
+      
+      it { @activity.verb.should be_nil }
     end
   end
   

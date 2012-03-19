@@ -5,7 +5,7 @@ describe Joyce do
   describe ".publish_activity" do
     before do
       @actor = create(:thing)
-      @verb = "fooled"
+      @verb = Acted
     end
     
     subject { Joyce.publish_activity(:actor => @actor, :verb => @verb) }
@@ -26,6 +26,16 @@ describe Joyce do
     
     it "should save the verb" do
       subject.verb.should == @verb
+    end
+    
+    it "should serialize the verb" do
+      subject
+      Joyce::Activity.last.verb.should == @verb
+    end
+    
+    context "when verb is not a Joyce::Verb" do
+      before{ @verb = Object }
+      it{ expect{ subject }.to raise_error ArgumentError }
     end
     
     context "with missing parameters" do
