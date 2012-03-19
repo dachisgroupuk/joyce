@@ -62,6 +62,11 @@ describe Joyce do
       Joyce::Stream.where(:owner_id => @actor.id, :name => nil).first.activities.should include(activity)
     end
     
+    it "should add activity to the default verb stream" do
+      activity = subject
+      Joyce::Stream.where(:owner_type => @verb.to_s, :name => nil).first.activities.should include(activity)
+    end
+    
     context "with an object" do
       before { @object = create(:thing) }
       subject { Joyce.publish_activity(:actor => @actor, :verb => @verb, :obj => @object) }

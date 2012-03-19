@@ -27,6 +27,7 @@ module Joyce
     activity = Activity.create(:actor => actor, :verb => verb, :obj => obj)
     activity.set_targets(args)
     
+    add_to_stream_owned_by(verb, activity)
     add_to_stream_owned_by(actor, activity)
     add_to_stream_owned_by(obj, activity) unless obj.nil?
     args.each do |name, target|
