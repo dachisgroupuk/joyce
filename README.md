@@ -26,6 +26,16 @@ Just add `act_as_joyce` in your models to enable activity streaming for them. E.
 
 This will add to the model methods such as `activity_stream`.
 
+## Concepts
+
+The basic concepts in Joyce are the **activity** and the **stream**.
+
+An **activity** is a trace of an action that happened in an application. It can usually be mapped to a simple sentence, such as _John logged in_ or _Jane added a comment to a post_. The verb identifies the activity, the subject identifies the actor and the other entities in the sentence represent other people or objects contributing to the activity.
+
+A **stream** is a list of activities, usually presented in reverse chronological order. An activity can belong to multiple streams. In fact, by default, an activity belongs to the streams of all the entities involved in it: the activity _user#1 added comment#2 to post#3_ belongs to the stream for *user#1*, the one for *comment#2* and the one for *post#3*. It also belongs to the generic *User*, *Comment*, and *Post* streams.
+
+An additional concept is the **subscription**. To make streams more manageable, it is possible to subscribe to multiple streams, in order to get a composite stream containing all the activities for them.
+
 ## Usage
 
 Basic usage:
