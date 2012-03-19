@@ -17,26 +17,53 @@ describe Joyce::Stream do
   end
   
   describe ".find_or_create_by_owner" do
-    let(:owner) { create(:thing) }
-    
-    context "when stream does not exist" do
-      it "should create stream" do
-        Joyce::Stream.should_receive(:create).with(:owner => owner)
-        Joyce::Stream.find_or_create_by_owner(owner)
+    context "with owner instance" do
+      let(:owner) { create(:thing) }
+
+      context "when stream does not exist" do
+        it "should create stream" do
+          Joyce::Stream.should_receive(:create).with(:owner_id => owner.id, :owner_type => owner.class)
+          Joyce::Stream.find_or_create_by_owner(owner)
+        end
+      end
+
+      context "when stream does exist" do
+        before { @stream = Joyce::Stream.create(:owner => owner) }
+
+        it "should return stream" do
+          Joyce::Stream.find_or_create_by_owner(owner).should == @stream
+        end
+
+        it "should not create stream" do
+          Joyce::Stream.should_not_receive(:create)
+          Joyce::Stream.find_or_create_by_owner(owner)
+        end
       end
     end
     
-    context "when stream does exist" do
-      before { @stream = Joyce::Stream.create(:owner => owner) }
-      
-      it "should return stream" do
-        Joyce::Stream.find_or_create_by_owner(owner).should == @stream
+    context "with verb class" do
+      let(:verb) { Acted }
+
+      context "when stream does not exist" do
+        it "should create stream" do
+          Joyce::Stream.should_receive(:create).with(:owner_type => verb.to_s)
+          Joyce::Stream.find_or_create_by_owner(verb)
+        end
       end
-      
-      it "should not create stream" do
-        Joyce::Stream.should_not_receive(:create)
-        Joyce::Stream.find_or_create_by_owner(owner)
+
+      context "when stream does exist" do
+        before { @stream = Joyce::Stream.create(:owner_type => verb.to_s) }
+
+        it "should return stream" do
+          Joyce::Stream.find_or_create_by_owner(verb).should == @stream
+        end
+
+        it "should not create stream" do
+          Joyce::Stream.should_not_receive(:create)
+          Joyce::Stream.find_or_create_by_owner(verb)
+        end
       end
     end
   end
+  
 end

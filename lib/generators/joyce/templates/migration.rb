@@ -10,7 +10,8 @@ class AddJoyceTables < ActiveRecord::Migration
     
     create_table 'joyce_streams', :force => true do |t|
       t.string      'name'
-      t.references  :owner, :polymorphic => true, :null => false
+      t.integer     :owner_id
+      t.string      :owner_type, :null => false
       t.timestamps
     end
     add_index(:joyce_streams, :owner_type)
