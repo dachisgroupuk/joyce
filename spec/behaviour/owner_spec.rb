@@ -7,12 +7,14 @@ describe Joyce::Behaviour::Owner do
     
     context "when the stream does not exist" do
       it { owner.activity_stream.should be_empty }
+      it { owner.activity_stream.should be_a(ActiveRecord::Relation) }
     end
     
     context "when the stream already exists" do
       before { @stream = Joyce::Stream.create(:owner => owner) }
       
       it { owner.activity_stream.should be_empty }
+      it { owner.activity_stream.should be_a(ActiveRecord::Relation) }
       
       context "when the stream has activities" do
         before do
@@ -21,6 +23,7 @@ describe Joyce::Behaviour::Owner do
         end
         
         it { owner.activity_stream.should == [@activity] }
+        it { owner.activity_stream.should be_a(ActiveRecord::Relation) }
       end
     end
   end
@@ -31,6 +34,7 @@ describe Joyce::Behaviour::Owner do
     
     context "when the stream does not exist" do
       it { Thing.activity_stream.should be_empty }
+      it { Thing.activity_stream.should be_a(ActiveRecord::Relation) }
     end
     
     context "when the stream already exists" do
@@ -40,6 +44,7 @@ describe Joyce::Behaviour::Owner do
       end
       
       it { Thing.activity_stream.should be_empty }
+      it { Thing.activity_stream.should be_a(ActiveRecord::Relation) }
       
       context "when the stream has activities" do
         before do
@@ -51,6 +56,7 @@ describe Joyce::Behaviour::Owner do
         end
         
         it { Thing.activity_stream.should == @activities_in_stream }
+        it { Thing.activity_stream.should be_a(ActiveRecord::Relation) }
       end
     end
   end

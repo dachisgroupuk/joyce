@@ -7,9 +7,10 @@ module Joyce
       end
       
       def activity_stream
-        stream = streams.where(:name => nil).first
-        return [] if stream.nil?
-        stream.activities
+        Joyce::Activity
+          .joins("JOIN joyce_activities_streams AS jas ON joyce_activities.id = jas.activity_id")
+          .joins("JOIN joyce_streams ON joyce_streams.id = jas.stream_id")
+          .where("joyce_streams" => {:name => nil, :owner_id => self.id, :owner_type => self.class})
       end
     end
     
