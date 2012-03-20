@@ -1,4 +1,5 @@
 require "joyce/version"
+require "joyce/class_with_stream"
 require 'joyce/scopes'
 require 'joyce/activity'
 require 'joyce/stream'

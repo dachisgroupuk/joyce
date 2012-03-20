@@ -1,10 +1,5 @@
 module Joyce
   class Verb
-    def self.activity_stream
-      Joyce::Activity
-        .joins("JOIN joyce_activities_streams AS jas ON joyce_activities.id = jas.activity_id")
-        .joins("JOIN joyce_streams ON joyce_streams.id = jas.stream_id")
-        .where("joyce_streams" => {:name => nil, :owner_type => self})
-    end
+    extend Joyce::ClassWithStream
   end
 end
