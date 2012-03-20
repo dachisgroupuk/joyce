@@ -4,6 +4,8 @@ module Joyce
     module Owner
       def self.included(base)
         base.extend ClassWithStream
+        base.has_many :streams, :class_name => Joyce::Stream, :as => :owner
+        #base.has_and_belongs_to_many :activities, :join_table => "joyce_activities_targets"
       end
       
       def activity_stream
