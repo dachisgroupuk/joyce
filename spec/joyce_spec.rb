@@ -129,6 +129,29 @@ describe Joyce do
           end
         end
       end
+      
+      only = [:actor, :verb]
+      context "with :only => #{only.inspect}" do
+        subject { Joyce.publish_activity(@params.merge(:only => only)) }
+
+        it "should add activity to the default :actor stream" do
+          expect{
+            subject
+          }.to change{ @params[:actor].activity_stream.all }
+        end
+        
+        it "should add activity to the default :verb stream" do
+          expect{
+            subject
+          }.to change{ @params[:verb].activity_stream.all }
+        end
+
+        it "should not add activity to the default :obj stream" do
+          expect{
+            subject
+          }.not_to change{ @params[:obj].activity_stream.all }
+        end
+      end
     end
   end
   

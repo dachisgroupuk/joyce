@@ -50,7 +50,9 @@ module Joyce
   end
   
   def self.init_streams_whitelist(only)
+    only = [only] unless only.is_a?(Array) || only.nil?
+    
     whitelist = [:actor, :verb, :obj]
-    only.nil? ? whitelist : whitelist.select{ |item| item == only }
+    only.nil? ? whitelist : whitelist.select{ |item| only.include?(item) }
   end
 end
