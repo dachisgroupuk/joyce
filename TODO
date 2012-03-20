@@ -1,4 +1,3 @@
-* Verify ActiveRecord compatibility with older versions (and update the gemspec file accordingly)
 * Add support for named streams
 * Add more scopes
 * Add documentation for targets

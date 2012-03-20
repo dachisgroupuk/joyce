@@ -25,5 +25,6 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency('timecop')
   gem.add_development_dependency('factory_girl')
   
-  gem.add_runtime_dependency('activerecord')
+  gem.add_runtime_dependency('activerecord', '~> 3.2.0')
+
 end
