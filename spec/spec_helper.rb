@@ -39,6 +39,16 @@ end
 
 class Acted < Joyce::Verb; end
 
+# support
+class Time
+  class << self
+    alias_method :old_now, :now
+    def now
+      old_now.round(0)
+    end
+  end
+end
+
 RSpec.configure do |config|
   # Prettyfying
   config.color_enabled  = true
