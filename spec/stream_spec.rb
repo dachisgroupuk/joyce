@@ -22,7 +22,7 @@ describe Joyce::Stream do
 
       context "when stream does not exist" do
         it "should create stream" do
-          Joyce::Stream.should_receive(:create).with(:owner_id => owner.id, :owner_type => owner.class)
+          Joyce::Stream.should_receive(:create).with(:owner_id => owner.id, :owner_type => owner.class.to_s)
           Joyce::Stream.find_or_create_by_owner(owner)
         end
       end

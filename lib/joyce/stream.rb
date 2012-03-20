@@ -17,7 +17,7 @@ module Joyce
       if owner.is_a?(Class)
         args = { :owner_type => owner.to_s }
       else
-        args = { :owner_id => owner.id, :owner_type => owner.class }
+        args = { :owner_id => owner.id, :owner_type => owner.class.to_s }
       end
       
       stream = where(args).first
