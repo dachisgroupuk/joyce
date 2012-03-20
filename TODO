@@ -1,7 +1,7 @@
 * Add support for named streams
 * Add more scopes
 * Add documentation for targets
-* Add support for :only parameter in publish_activity
+* Add :target support for :only parameter in publish_activity
 * Mixin a publish_activity method with an implicit actor into models
 * Test with large (realistic) volumes of activities
 * Reorganize lib/joyce folder
