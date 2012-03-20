@@ -37,16 +37,22 @@ describe Joyce::Behaviour::Subscriber do
 
       context "with model instance as a parameter" do
         let(:model) { create(:thing) }
+        before{ @producer = model }
 
         context "when model instance has got a stream" do
           before{ @stream = Joyce::Stream.create(:owner => model) }
-          before{ @producer = model }
 
           it_should_behave_like "a subscription creator"
 
           it "should save the model stream" do
             subscriber.subscribe_to(model)
             subscriber.stream_subscriptions.last.stream.should == @stream
+          end
+        end
+        context "when model instance doesn't have a stream yet" do
+          it_should_behave_like "a subscription creator"
+          it "should create a stream for the model instance" do
+            expect { subscriber.subscribe_to(model) }.to change {model.streams.count }.by(1)
           end
         end
       end
