@@ -24,12 +24,15 @@ module Joyce
     actor = args.delete(:actor)
     verb = args.delete(:verb)
     obj = args.delete(:obj)
+    only = args.delete(:only)
     
     activity = Activity.create(:actor => actor, :verb => verb, :obj => obj)
     activity.set_targets(args)
     
-    add_to_stream_owned_by(verb, activity)
-    add_to_stream_owned_by(actor, activity)
+    streams_whitelist = init_streams_whitelist(only)
+    
+    add_to_stream_owned_by(verb, activity) if streams_whitelist.include?(:verb)
+    add_to_stream_owned_by(actor, activity) if streams_whitelist.include?(:actor)
     add_to_stream_owned_by(obj, activity) unless obj.nil?
     args.each do |name, target|
       add_to_stream_owned_by(target, activity)
@@ -44,5 +47,10 @@ module Joyce
   def self.add_to_stream_owned_by(stream_owner, activity)
     stream = Joyce::Stream.find_or_create_by_owner(stream_owner)
     stream.activities << activity
+  end
+  
+  def self.init_streams_whitelist(only)
+    whitelist = [:actor, :verb, :obj]
+    only.nil? ? whitelist : whitelist.select{ |item| item == only }
   end
 end

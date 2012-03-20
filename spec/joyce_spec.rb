@@ -102,6 +102,22 @@ describe Joyce do
         Joyce::Stream.where(:owner_id => @target.id, :name => nil).first.activities.should include(activity)
       end
     end
+    
+    context "with a single :only parameter" do
+      subject { Joyce.publish_activity(:actor => @actor, :verb => @verb, :only => :actor) }
+      
+      it "should add activity to the default stream specified by :only" do
+        expect{
+          subject
+        }.to change{ @actor.activity_stream.all }
+      end
+      
+      it "should not add activity to any stream not specified by :only" do
+        expect{
+          subject
+        }.not_to change{ @verb.activity_stream.all }
+      end
+    end
   end
   
 end
