@@ -33,7 +33,7 @@ module Joyce
     
     add_to_stream_owned_by(verb, activity) if streams_whitelist.include?(:verb)
     add_to_stream_owned_by(actor, activity) if streams_whitelist.include?(:actor)
-    add_to_stream_owned_by(obj, activity) unless obj.nil?
+    add_to_stream_owned_by(obj, activity) if streams_whitelist.include?(:obj) unless obj.nil?
     args.each do |name, target|
       add_to_stream_owned_by(target, activity)
     end

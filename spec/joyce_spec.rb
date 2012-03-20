@@ -103,19 +103,31 @@ describe Joyce do
       end
     end
     
-    context "with a single :only parameter" do
-      subject { Joyce.publish_activity(:actor => @actor, :verb => @verb, :only => :actor) }
-      
-      it "should add activity to the default stream specified by :only" do
-        expect{
-          subject
-        }.to change{ @actor.activity_stream.all }
+    context "with :only parameter" do
+      before do
+        @object = create(:thing)
+        @params = { :actor => @actor, :verb => @verb, :obj => @object }
       end
       
-      it "should not add activity to any stream not specified by :only" do
-        expect{
-          subject
-        }.not_to change{ @verb.activity_stream.all }
+      only_values = [:actor, :verb, :obj]
+      only_values.each do |only|
+        context "with :only => :#{only}" do
+          subject { Joyce.publish_activity(@params.merge(:only => only)) }
+
+          it "should add activity to the default :#{only} stream" do
+            expect{
+              subject
+            }.to change{ @params[only].activity_stream.all }
+          end
+
+          only_values.reject{ |i| i == only }.each do |neg_only|
+            it "should not add activity to the default :#{neg_only} stream" do
+              expect{
+                subject
+              }.not_to change{ @params[neg_only].activity_stream.all }
+            end
+          end
+        end
       end
     end
   end
