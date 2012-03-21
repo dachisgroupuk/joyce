@@ -5,4 +5,4 @@
 * Mixin a publish_activity method with an implicit actor into models
 * Test with large (realistic) volumes of activities
 * Reorganize lib/joyce folder
-* Add migration generator
+* Think about a multiple-migration scenario: how to manage that in a gem?
