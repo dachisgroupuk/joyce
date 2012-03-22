@@ -21,7 +21,13 @@ module Joyce
       raise ArgumentError.new("Parameter for set_targets should be a hash of type {:name => target}") unless targets.is_a?(Hash)
       
       targets.each do |name, target|
-        ActivityTarget.create(:name => name, :activity => self, :target => target)
+        if target.is_a?(Array)
+          target.each do |t|
+            ActivityTarget.create(:name => name, :activity => self, :target => t)
+          end
+        else
+          ActivityTarget.create(:name => name, :activity => self, :target => target)
+        end
       end
     end
     

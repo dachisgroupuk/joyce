@@ -46,6 +46,16 @@ describe Joyce::Activity do
       }.to change{ activity.get_targets(:thing) }.to([thing])
     end
     
+    context "when hash value is an array" do
+      let(:things) { 2.times.map{ |i| create(:thing) } }
+      
+      it "should set the targets" do
+        expect{
+          activity.set_targets(:things => things)
+        }.to change{ activity.get_targets(:things) }.to(things)
+      end
+    end
+    
   end
   
   describe "scopes" do
