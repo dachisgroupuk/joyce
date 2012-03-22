@@ -17,3 +17,4 @@ tmp
 .rvmrc
 *.db
 *.db-journal
+*.tmproj
