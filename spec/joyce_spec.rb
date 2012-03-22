@@ -103,6 +103,22 @@ describe Joyce do
       end
     end
     
+    context "with an array of targets" do
+      before { @things = 2.times.map{ |i| create(:thing) } }
+      subject { Joyce.publish_activity(:actor => @actor, :verb => @verb, :things => @things) }
+      
+      it "should save the targets" do
+        subject.get_targets(:things).should == @things
+      end
+      
+      it "should add activity to the default target streams" do
+        activity = subject
+        @things.each do |thing|
+          Joyce::Stream.where(:owner_id => thing.id, :name => nil).first.activities.should include(activity)
+        end
+      end
+    end
+    
     context "with :only parameter" do
       before do
         @object = create(:thing)
