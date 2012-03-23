@@ -71,6 +71,14 @@ describe Joyce::Activity do
           activity.set_targets(:things => things)
         }.to change{ activity.get_targets(:things) }.to(things)
       end
+      
+      context "when empty" do
+        it "should not do anything" do
+          expect{
+            activity.set_targets(:things => [])
+          }.not_to change{ activity.get_targets(:things) }
+        end
+      end
     end
     
   end
