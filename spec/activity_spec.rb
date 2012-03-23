@@ -19,16 +19,33 @@ describe Joyce::Activity do
     let(:activity) { create(:activity) }
     it { activity.get_targets.should be_empty }
     
-    context "when targets exist" do
+    context "with default target" do
       before do
         @default_target = build(:thing)
         Joyce::ActivityTarget.create(:activity => activity, :target => @default_target)
+      end
+      
+      it { activity.get_targets.should == [@default_target] }
+    end
+    
+    context "with named target" do
+      before do
         @test_target = build(:thing)
         Joyce::ActivityTarget.create(:activity => activity, :target => @test_target, :name => :test)
       end
       
-      it { activity.get_targets.should == [@default_target]}
-      it { activity.get_targets(:test).should == [@test_target]}
+      it { activity.get_targets(:test).should == [@test_target] }
+    end
+    
+    context "with array targets" do
+      before do
+        @test_targets = 2.times.map{ |i| build(:thing) }
+        @test_targets.each do |target|
+          Joyce::ActivityTarget.create(:activity => activity, :target => target, :name => :test)
+        end
+      end
+      
+      it { activity.get_targets(:test).should == @test_targets }
     end
   end
   
