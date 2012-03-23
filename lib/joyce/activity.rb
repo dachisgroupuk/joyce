@@ -40,5 +40,16 @@ module Joyce
       verb_value = read_attribute(:verb)
       verb_value.nil? ? nil : verb_value.constantize
     end
+    
+    def subscribers
+      subscriptions = Joyce::StreamSubscriber
+        .joins("JOIN joyce_activities_streams AS jas ON joyce_streams_subscribers.stream_id = jas.stream_id")
+        .joins("JOIN joyce_activities ON jas.activity_id = joyce_activities.id")
+        .where(:joyce_activities => {:id => self.id})
+        .where("joyce_activities.created_at <= joyce_streams_subscribers.ended_at OR joyce_streams_subscribers.ended_at IS NULL")
+        .where("joyce_activities.created_at >= joyce_streams_subscribers.started_at")
+      
+      subscriptions.collect{ |s| s.subscriber }
+    end
   end
 end

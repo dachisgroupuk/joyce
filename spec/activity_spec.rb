@@ -128,4 +128,31 @@ describe Joyce::Activity do
     end
   end
   
+  describe "#subscribers" do
+    let(:actor) { create(:person) }
+    let(:activity) { Joyce.publish_activity(:actor => actor, :verb => Acted) }
+    
+    it { activity.subscribers.should be_empty }
+    it { activity.subscribers.should be_a(Array) }
+    
+    context "with a current subscriber" do
+      let(:subscriber) { create(:thing) }
+      before{ subscriber.subscribe_to(actor) }
+      
+      it { activity.subscribers.should == [subscriber] }
+    end
+    
+    context "with a past subscriber" do
+      let(:subscriber) { create(:thing) }
+      before do
+        Timecop.travel(1.week.ago) do
+          subscriber.subscribe_to(actor)
+          subscriber.unsubscribe_from(actor)
+        end
+      end
+      
+      it { activity.subscribers.should be_empty }
+    end
+  end
+  
 end
