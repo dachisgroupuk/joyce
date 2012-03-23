@@ -78,6 +78,47 @@ Or you can get all the activities for all instances of a model. E.g.:
 
     Person.activity_stream
 
+### Targets
+
+Targets are another kind of entity that can be attached to an activity, to map all relationships that do not fit in the *actor/verb/object* model.
+
+E.g. an activity such as *Jane added a comment to a post* can be coded as such:
+
+    Joyce.publish_activity(:actor => jane, :verb => Added, :obj => comment, :target => post)
+
+The *get_targets* method can be used to retrieve targets for an activity. E.g., given the activity defined earlier:
+
+    activity.get_targets(:target) # => will return [post]
+
+Note that `:target` is the default target name, so the line above is equivalent to:
+
+    activity.get_targets # => will return [post]
+
+#### Named targets
+
+Targets act very much like a bucket of generic items: it is possible to add as many targets as you like to an activity. Notice that Joyce will consider as targets all the `publish_activity` parameters that are not already reserved terms (e.g. `:actor`, `:verb` and such).
+
+E.g. an activity such as *Jane added a comment to a post in a group* can be coded as such:
+
+    Joyce.publish_activity(:actor => jane, :verb => Added, :obj => comment, :post => post, :group => group)
+
+The targets can then be retrieved with:
+
+    activity.get_targets(:post) # => will return [post]
+    activity.get_targets(:group) # => will return [group]
+
+#### Array targets
+
+It is possible to specify an array as a target value (although it will need to be named).
+
+E.g. an activity such as *Jane added a post to groups A and B* can be coded as such:
+
+    Joyce.publish_activity(:actor => jane, :verb => Added, :obj => post, :groups => [groupA, groupB])
+
+The targets can then be retrieved with:
+
+    activity.get_targets(:groups) # => will return [groupA, groupB]
+
 
 ## Testing
 
