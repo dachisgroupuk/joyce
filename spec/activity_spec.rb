@@ -84,7 +84,7 @@ describe Joyce::Activity do
   end
   
   describe "scopes" do
-    describe "#since" do
+    describe ".since" do
       before do
         Timecop.travel(2.weeks.ago) do
           @activity_to_drop = create(:activity)
@@ -93,6 +93,83 @@ describe Joyce::Activity do
       end
       
       it { Joyce::Activity.since(1.week.ago).should == [@activity_to_show] }
+    end
+    
+    describe ".with_* scopes" do
+      before { @wrong_activity = create(:activity) }
+      
+      shared_examples_for "a .with_* scope" do
+        it "should include the activity with the specified element" do
+          subject.should include(@right_activity)
+        end
+
+        it "should not include any activity without the specified element" do
+          subject.should_not include(@wrong_activity)
+        end
+      end
+
+      describe ".with_actor" do
+        let(:actor) { create(:thing) }
+        it { Joyce::Activity.with_actor(actor).should be_empty }
+
+        context "with activities" do
+          before{ @right_activity = create(:activity, :actor => actor) }
+
+          subject { Joyce::Activity.with_actor(actor) }
+          it_should_behave_like "a .with_* scope"
+        end
+      end
+
+      describe ".with_verb" do
+        let(:verb) { Acted }
+        it { Joyce::Activity.with_verb(verb).should be_empty }
+
+        context "with activities" do
+          before{ @right_activity = create(:activity, :verb => Acted) }
+
+          subject { Joyce::Activity.with_verb(verb) }
+          it_should_behave_like "a .with_* scope"
+        end
+      end
+
+      describe ".with_object" do
+        let(:obj) { create(:thing) }
+        it { Joyce::Activity.with_object(obj).should be_empty }
+
+        context "with activities" do
+          before{ @right_activity = create(:activity, :obj => obj) }
+
+          subject { Joyce::Activity.with_object(obj) }
+          it_should_behave_like "a .with_* scope"
+        end
+      end
+
+      describe ".with_target" do
+        let(:target) { create(:thing) }
+        it { Joyce::Activity.with_target(target).should be_empty }
+
+        context "with activities" do
+          context "with a single target" do
+            before do
+              @right_activity = create(:activity)
+              @right_activity.set_targets(:target => target)
+            end
+
+            subject { Joyce::Activity.with_target(target) }
+            it_should_behave_like "a .with_* scope"
+          end
+
+          context "with an array of targets" do
+            before do
+              @right_activity = create(:activity)
+              @right_activity.set_targets(:targets => [target, create(:thing)])
+            end
+
+            subject { Joyce::Activity.with_target(target) }
+            it_should_behave_like "a .with_* scope"
+          end
+        end
+      end
     end
   end
   
