@@ -99,11 +99,11 @@ describe Joyce::Activity do
       before { @wrong_activity = create(:activity) }
       
       shared_examples_for "a .with_* scope" do
-        it "should include the activity with the specified element" do
+        it "should include the activity with the specified component" do
           subject.should include(@right_activity)
         end
 
-        it "should not include any activity without the specified element" do
+        it "should not include any activity without the specified component" do
           subject.should_not include(@wrong_activity)
         end
       end
@@ -168,6 +168,38 @@ describe Joyce::Activity do
             subject { Joyce::Activity.with_target(target) }
             it_should_behave_like "a .with_* scope"
           end
+        end
+      end
+      
+      describe ".with_component" do
+        let(:actor) { create(:thing) }
+        let(:verb) { Acted }
+        let(:object) { create(:thing) }
+        let(:target) { create(:thing) }
+        before do
+          @right_activity = create(:activity, :actor => actor, :verb => verb, :obj => object)
+          @right_activity.set_targets(:target => target)
+          @wrong_activity = create(:activity)
+        end
+        
+        context "with an actor" do
+          subject { Joyce::Activity.with_component(actor) }
+          it_should_behave_like "a .with_* scope"
+        end
+        
+        context "with a verb" do
+          subject { Joyce::Activity.with_component(verb) }
+          it_should_behave_like "a .with_* scope"
+        end
+        
+        context "with an object" do
+          subject { Joyce::Activity.with_component(object) }
+          it_should_behave_like "a .with_* scope"
+        end
+        
+        context "with a target" do
+          subject { Joyce::Activity.with_component(target) }
+          it_should_behave_like "a .with_* scope"
         end
       end
     end
