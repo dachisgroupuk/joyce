@@ -33,6 +33,22 @@ describe Joyce do
       Joyce::Activity.last.verb.should == @verb
     end
     
+    describe "notification" do
+      it "should fire a notification" do
+        Joyce.should_receive(:notify_observers).with(:after_publish, anything())
+        subject
+      end
+
+      it "should pass the activity with the notification" do
+        notified_activity = nil
+        Joyce.stub(:notify_observers) do |arg1, arg2|
+          notified_activity = arg2
+        end
+        returned_activity = subject
+        notified_activity.should == returned_activity
+      end
+    end
+    
     context "when verb is not a Joyce::Verb" do
       before{ @verb = Object }
       it{ expect{ subject }.to raise_error ArgumentError }

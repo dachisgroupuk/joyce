@@ -15,6 +15,10 @@ if defined?(ActiveRecord)
 end
 
 module Joyce
+  # These 2 extend are needed to make this module observable
+  extend ActiveModel::Observing::ClassMethods
+  extend ActiveSupport::DescendantsTracker
+  
   def self.publish_activity(args)
     raise ArgumentError.new("An actor must be specified for the Activity") unless args[:actor]
     raise ArgumentError.new("A verb must be specified for the Activity") unless args[:verb]
@@ -43,6 +47,8 @@ module Joyce
         add_to_stream_owned_by(target, activity)
       end
     end
+    
+    notify_observers(:after_publish, activity)
     
     activity
   end
