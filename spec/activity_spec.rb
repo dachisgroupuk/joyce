@@ -264,4 +264,62 @@ describe Joyce::Activity do
     end
   end
   
+  describe "#destroy" do
+    let(:actor) { create(:thing) }
+    let(:object) { create(:thing) }
+    let(:targets) { 2.times.map{ create(:thing) } }
+    before do
+      @activity = create(:activity, :actor => actor, :obj => object)
+      @activity.set_targets(:targets => targets)
+    end
+    
+    subject { @activity.destroy }
+    
+    it "should remove the activity" do
+      expect{
+        subject
+      }.to change{ Joyce::Activity.count }.by(-1)
+    end
+    
+    it "should not remove the actor instance" do
+      expect{
+        subject
+      }.not_to change{ actor.class.count }
+    end
+    
+    it "should not remove the object instance" do
+      expect{
+        subject
+      }.not_to change{ object.class.count }
+    end
+    
+    it "should not remove the target instance" do
+      expect{
+        subject
+      }.not_to change{ targets.first.class.count }
+    end
+    
+    it "should remove association with targets" do
+      expect{
+        subject
+      }.to change{ Joyce::ActivityTarget.count }.by(-targets.size)
+    end
+    
+    context "with a stream" do
+      before{ @activity.streams << create(:stream, :owner => actor) }
+      
+      it "should not remove the stream instance" do
+        expect{
+          subject
+        }.not_to change{ Joyce::Stream.count }
+      end
+      
+      it "should remove association with targets" do
+        expect{
+          subject
+        }.to change{ @activity.streams.count }.by(-1)
+      end
+    end
+  end
+  
 end

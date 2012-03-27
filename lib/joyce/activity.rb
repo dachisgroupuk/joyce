@@ -7,7 +7,7 @@ module Joyce
     belongs_to :actor, :polymorphic => true
     belongs_to :obj, :polymorphic => true
     has_and_belongs_to_many :streams, :join_table => "joyce_activities_streams"
-    has_and_belongs_to_many :targets, :join_table => "joyce_activities_targets"
+    has_many :activity_targets, :dependent => :delete_all
     
     validates_presence_of :actor, :verb
     

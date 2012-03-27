@@ -11,4 +11,8 @@ FactoryGirl.define do
   factory :person do
     name "The Person"
   end
+  
+  factory :stream, :class => Joyce::Stream do
+    association :owner, :factory => :thing
+  end
 end
