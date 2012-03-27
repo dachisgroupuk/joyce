@@ -12,6 +12,7 @@ module Joyce
     validates_presence_of :actor, :verb
     
     extend Joyce::Scopes
+    default_scope order("joyce_activities.created_at DESC")
     
     def get_targets(name=:target)
       ActivityTarget.where(:name => name, :activity_id => id).map{ |at| at.target }
