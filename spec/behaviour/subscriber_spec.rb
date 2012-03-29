@@ -56,10 +56,6 @@ describe Joyce::Behaviour::Subscriber do
           end
         end
       end
-
-      context "with wrong parameter" do
-        it{ expect{ subscriber.subscribe_to(Object.new) }.to raise_error ArgumentError }
-      end
     end
     
     context "when subscribed" do
@@ -70,6 +66,10 @@ describe Joyce::Behaviour::Subscriber do
       end
       
       it{ expect{ subscriber.subscribe_to(@stream) }.to raise_error Joyce::DuplicateSubscriptionError }
+    end
+    
+    context "with wrong parameter" do
+      it{ expect{ subscriber.subscribe_to(Object.new) }.to raise_error ArgumentError }
     end
   end
   
