@@ -28,7 +28,7 @@ module Joyce
       queries = arel_component_queries(id, klass)
       
       self
-        .joins("JOIN joyce_activities_targets ON joyce_activities_targets.activity_id = id")
+        .joins("LEFT JOIN joyce_activities_targets ON joyce_activities_targets.activity_id = id")
         .where(queries[:actor].or(queries[:verb]).or(queries[:object]).or(queries[:target]))
     end
     

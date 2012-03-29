@@ -178,7 +178,6 @@ describe Joyce::Activity do
         let(:target) { create(:thing) }
         before do
           @right_activity = create(:activity, :actor => actor, :verb => verb, :obj => object)
-          @right_activity.set_targets(:target => target)
           @wrong_activity = create(:activity)
         end
         
@@ -197,9 +196,13 @@ describe Joyce::Activity do
           it_should_behave_like "a .with_* scope"
         end
         
-        context "with a target" do
-          subject { Joyce::Activity.with_component(target) }
-          it_should_behave_like "a .with_* scope"
+        context "when activity has a target" do
+          before{ @right_activity.set_targets(:target => target) }
+          
+          context "with a target" do
+            subject { Joyce::Activity.with_component(target) }
+            it_should_behave_like "a .with_* scope"
+          end
         end
       end
     end
