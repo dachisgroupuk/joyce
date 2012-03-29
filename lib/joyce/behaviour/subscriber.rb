@@ -35,6 +35,11 @@ module Joyce
           .where("joyce_activities.created_at >= jss.started_at")
           .order("joyce_activities.created_at DESC")
       end
+      
+      def subscribed_to?(producer)
+        stream = stream_from_producer(producer)
+        !stream_subscriptions.where(:stream_id => stream.id, :ended_at => nil).empty?
+      end
 
 
       private

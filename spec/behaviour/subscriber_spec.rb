@@ -202,4 +202,48 @@ describe Joyce::Behaviour::Subscriber do
     end
   end
   
+  describe "#subscribed_to?" do
+    context "when not subscribed" do
+      context "with stream as a parameter" do
+        let(:stream) { Joyce::Stream.create(:owner => create(:thing)) }
+
+        it{ subscriber.subscribed_to?(stream).should be_false }
+      end
+
+      context "with model instance as a parameter" do
+        let(:model) { create(:thing) }
+
+        context "when model instance has got a stream" do
+          before{ @stream = Joyce::Stream.create(:owner => model) }
+
+          it{ subscriber.subscribed_to?(model).should be_false }
+        end
+        
+        context "when model instance doesn't have a stream yet" do
+          it{ subscriber.subscribed_to?(model).should be_false }
+        end
+      end
+    end
+    
+    context "when subscribed" do
+      context "with stream as a parameter" do
+        let(:stream) { Joyce::Stream.create(:owner => create(:thing)) }
+        before{ subscriber.subscribe_to(stream) }
+
+        it{ subscriber.subscribed_to?(stream).should be_true }
+      end
+
+      context "with model instance as a parameter" do
+        let(:model) { create(:thing) }
+        before{ subscriber.subscribe_to(model) }
+
+        it{ subscriber.subscribed_to?(model).should be_true }
+      end
+    end
+    
+    context "with wrong parameter" do
+      it{ expect{ subscriber.subscribed_to?(Object.new) }.to raise_error ArgumentError }
+    end
+  end
+  
 end
