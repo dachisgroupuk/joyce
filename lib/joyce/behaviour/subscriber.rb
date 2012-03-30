@@ -34,6 +34,7 @@ module Joyce
           .where("joyce_activities.created_at <= jss.ended_at OR jss.ended_at IS NULL")
           .where("joyce_activities.created_at >= jss.started_at")
           .order("joyce_activities.created_at DESC")
+          .uniq
       end
       
       def subscribed_to?(producer)

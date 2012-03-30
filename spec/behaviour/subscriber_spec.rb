@@ -199,6 +199,18 @@ describe Joyce::Behaviour::Subscriber do
           end
         end
       end
+    
+      context "when multiple streams contain the same activity" do
+        before do
+          @activity = create(:activity)
+          @person_stream.activities << @activity
+          @thing_stream.activities << @activity
+        end
+        
+        it "should return the activity once" do
+          subscriber.subscribed_activity_stream.select{ |a| a == @activity }.count.should == 1
+        end
+      end
     end
   end
   
