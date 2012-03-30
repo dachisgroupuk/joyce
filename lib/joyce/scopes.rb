@@ -8,18 +8,36 @@ module Joyce
       self.where(:actor_id => actor.id, :actor_type => actor.class.to_s)
     end
     
+    def without_actor(actor)
+      self.where(["actor_id <> ? OR actor_type <> ?", actor.id, actor.class.to_s])
+    end
+    
     def with_object(object)
       self.where(:obj_id => object.id, :obj_type => object.class.to_s)
+    end
+    
+    def without_object(object)
+      self.where(["obj_id IS NULL OR obj_id <> ? OR obj_type <> ?", object.id, object.class.to_s])
     end
     
     def with_verb(verb)
       self.where(:verb => verb.to_s)
     end
     
+    def without_verb(verb)
+      self.where(["verb <> ?", verb.to_s])
+    end
+    
     def with_target(target)
       self
         .joins("JOIN joyce_activities_targets ON joyce_activities_targets.activity_id = id")
         .where(:joyce_activities_targets => {:target_id => target.id, :target_type => target.class.to_s})
+    end
+    
+    def without_target(target)
+      self
+        .joins("LEFT JOIN joyce_activities_targets ON joyce_activities_targets.activity_id = id")
+        .where(["target_id IS NULL OR target_id <> ? OR target_type <> ?", target.id, target.class.to_s])
     end
     
     def with_component(component)

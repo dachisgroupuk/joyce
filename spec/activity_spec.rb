@@ -206,6 +206,96 @@ describe Joyce::Activity do
         end
       end
     end
+    
+    describe ".without_* scopes" do
+      shared_examples_for "a .without_* scope" do
+        it "should not include the activity with the specified component" do
+          subject.should_not include(@wrong_activity)
+        end
+
+        it "should include any activity without the specified component" do
+          subject.should include(@right_activity)
+        end
+      end
+      
+      describe ".without_actor" do
+        let(:actor) { create(:thing) }
+        it { Joyce::Activity.without_actor(actor).should be_empty }
+
+        context "with activities" do
+          before{ @right_activity = create(:activity) }
+          before{ @wrong_activity = create(:activity, :actor => actor) }
+
+          subject { Joyce::Activity.without_actor(actor) }
+          it_should_behave_like "a .without_* scope"
+        end
+      end
+      
+      describe ".without_verb" do
+        let(:verb) { Acted }
+        it { Joyce::Activity.without_verb(verb).should be_empty }
+
+        context "with activities" do
+          before{ @right_activity = create(:activity) }
+          before{ @wrong_activity = create(:activity, :verb => verb) }
+
+          subject { Joyce::Activity.without_verb(verb) }
+          it_should_behave_like "a .without_* scope"
+        end
+      end
+      
+      describe ".without_object" do
+        let(:object) { create(:thing) }
+        it { Joyce::Activity.without_object(object).should be_empty }
+
+        context "with activities" do
+          before{ @wrong_activity = create(:activity, :obj => object) }
+          
+          context "with activities without object" do
+            before{ @right_activity = create(:activity) }
+
+            subject { Joyce::Activity.without_object(object) }
+            it_should_behave_like "a .without_* scope"
+          end
+          
+          context "with activities with a different object" do
+            before{ @right_activity = create(:activity, :obj => create(:thing)) }
+
+            subject { Joyce::Activity.without_object(object) }
+            it_should_behave_like "a .without_* scope"
+          end
+        end
+      end
+      
+      describe ".without_target" do
+        let(:target) { create(:thing) }
+        it { Joyce::Activity.without_target(target).should be_empty }
+
+        context "with activities" do
+          before do
+            @wrong_activity = create(:activity)
+            @wrong_activity.set_targets(:target => target)
+          end
+          
+          context "with activities without target" do
+            before{ @right_activity = create(:activity) }
+
+            subject { Joyce::Activity.without_target(target) }
+            it_should_behave_like "a .without_* scope"
+          end
+          
+          context "with activities with a different target" do
+            before do
+              @right_activity = create(:activity)
+              @right_activity.set_targets(:target => create(:thing))
+            end
+
+            subject { Joyce::Activity.without_target(target) }
+            it_should_behave_like "a .without_* scope"
+          end
+        end
+      end
+    end
   end
   
   describe "#verb=" do
