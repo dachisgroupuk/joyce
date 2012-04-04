@@ -49,6 +49,7 @@ module Joyce
         .where(:joyce_activities => {:id => self.id})
         .where("joyce_activities.created_at <= joyce_streams_subscribers.ended_at OR joyce_streams_subscribers.ended_at IS NULL")
         .where("joyce_activities.created_at >= joyce_streams_subscribers.started_at")
+        .group(["joyce_streams_subscribers.subscriber_id", "joyce_streams_subscribers.subscriber_id"])
       
       subscriptions.collect{ |s| s.subscriber }
     end

@@ -355,6 +355,18 @@ describe Joyce::Activity do
       
       it { activity.subscribers.should be_empty }
     end
+    
+    context "when subscribed to multiple streams for the same activity" do
+      let(:object) { create(:person) }
+      let(:activity) { Joyce.publish_activity(:actor => actor, :verb => Acted, :obj => object) }
+      let(:subscriber) { create(:thing) }
+      before do
+        subscriber.subscribe_to(actor)
+        subscriber.subscribe_to(object)
+      end
+      
+      it { activity.subscribers.should == [subscriber] }
+    end
   end
   
   describe "#destroy" do
