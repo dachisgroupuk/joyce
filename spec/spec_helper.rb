@@ -22,7 +22,7 @@ AddJoyceTables.up
 class Thing < ActiveRecord::Base
   acts_as_joyce
 end
-ActiveRecord::Base.connection.execute("DROP TABLE IF EXISTS `things`")
+ActiveRecord::Base.connection.execute("DROP TABLE IF EXISTS things")
 ActiveRecord::Base.connection.create_table(:things) do |t|
     t.string :name
     t.timestamps
@@ -31,7 +31,7 @@ end
 class Person < ActiveRecord::Base
   acts_as_joyce
 end
-ActiveRecord::Base.connection.execute("DROP TABLE IF EXISTS `people`")
+ActiveRecord::Base.connection.execute("DROP TABLE IF EXISTS people")
 ActiveRecord::Base.connection.create_table(:people) do |t|
     t.string :name
     t.timestamps

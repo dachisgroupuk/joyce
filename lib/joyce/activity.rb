@@ -45,13 +45,11 @@ module Joyce
     def subscribers
       subscriptions = Joyce::StreamSubscriber
         .joins("JOIN joyce_activities_streams AS jas ON joyce_streams_subscribers.stream_id = jas.stream_id")
-        .joins("JOIN joyce_activities ON jas.activity_id = joyce_activities.id")
-        .where(:joyce_activities => {:id => self.id})
-        .where("joyce_activities.created_at <= joyce_streams_subscribers.ended_at OR joyce_streams_subscribers.ended_at IS NULL")
-        .where("joyce_activities.created_at >= joyce_streams_subscribers.started_at")
-        .group(["joyce_streams_subscribers.subscriber_id", "joyce_streams_subscribers.subscriber_type"])
-      
-      subscriptions.collect{ |s| s.subscriber }
+        .includes(:subscriber)
+        .where("jas.activity_id = ?", self.id)
+        .where("joyce_streams_subscribers.ended_at IS NULL OR joyce_streams_subscribers.ended_at >= ?", self.created_at)
+        .where("joyce_streams_subscribers.started_at <= ?", self.created_at)
+      subscriptions.collect{ |s| s.subscriber }.uniq
     end
   end
 end
