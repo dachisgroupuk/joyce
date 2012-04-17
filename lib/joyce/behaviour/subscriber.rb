@@ -42,6 +42,9 @@ module Joyce
         !stream_subscriptions.where(:stream_id => stream.id, :ended_at => nil).empty?
       end
 
+      def subscriptions(date_at = Time.now)
+        self.stream_subscriptions.map{|ss| ss.stream.owner if ss.active_at(date_at) }.compact
+      end
 
       private
 
