@@ -117,6 +117,24 @@ describe Joyce::Behaviour::Subscriber do
       let(:stream) { Joyce::Stream.create(:owner => create(:thing)) }
       it{ expect{ subscriber.unsubscribe_from(stream) }.to raise_error Joyce::NoSubscriptionError }
     end
+    
+    context "when subscribed for the second time" do
+      let(:model) { create(:thing) }
+      before do
+        @stream = Joyce::Stream.create(:owner => model)
+        Timecop.travel(1.month.ago) do
+          subscriber.subscribe_to(@stream)
+          subscriber.unsubscribe_from(@stream)
+        end
+        subscriber.subscribe_to(@stream)
+      end
+      
+      it "should not leave any subscription open" do
+        expect{
+          subscriber.unsubscribe_from(@stream)
+        }.to change{ Joyce::StreamSubscriber.where(:stream_id => @stream, :ended_at => nil).count }.to(0)
+      end
+    end
   end
   
   describe "#subscribed_activity_stream" do

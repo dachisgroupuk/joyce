@@ -19,7 +19,7 @@ module Joyce
       
       def unsubscribe_from(producer)
         stream = stream_from_producer(producer)
-        stream_subscriber = stream_subscriptions.where(:stream_id => stream.id).first
+        stream_subscriber = stream_subscriptions.where(:stream_id => stream.id, :ended_at => nil).first
         raise NoSubscriptionError.new("No subscription to #{producer} could be found") if stream_subscriber.nil?
 
         stream_subscriber.ended_at = Time.now
