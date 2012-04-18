@@ -2,14 +2,19 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Joyce::Behaviour::Subscriber do
   
-  let(:subscriber) { create(:thing) }
+  let(:subscriber) { create(:person) }
   
-  it { subscriber.stream_subscriptions.should be_empty }
+  describe "#stream_subscriptions" do
+    it { subscriber.stream_subscriptions.should be_empty }
+  end
+  describe "#subscriptions" do
+    it { subscriber.subscriptions.should be_empty}
+  end
   
   describe "#subscribe_to" do
     context "when not subscribed" do
       shared_examples_for "a subscription creator" do
-        it "should add a subscription" do
+        it "should add a stream subscription" do
           expect{
             subscriber.subscribe_to(@producer)
           }.to change{ subscriber.stream_subscriptions.count }.by(1)
@@ -121,9 +126,9 @@ describe Joyce::Behaviour::Subscriber do
     
     context "when subscribed to multiple streams" do
       before do
-        @thing_stream = Joyce::Stream.create(:owner => create(:thing))
-        @person_stream = Joyce::Stream.create(:owner => create(:person))
         Timecop.travel(1.month.ago) do
+          @thing_stream = Joyce::Stream.create(:owner => create(:thing))
+          @person_stream = Joyce::Stream.create(:owner => create(:person))
           subscriber.subscribe_to(@thing_stream)
           subscriber.subscribe_to(@person_stream)
         end
@@ -140,6 +145,7 @@ describe Joyce::Behaviour::Subscriber do
         it "should show activities from the stream" do
           subscriber.subscribed_activity_stream.should == [@activity]
         end
+        it { subscriber.subscriptions.should == [@thing_stream.owner, @person_stream.owner] }
       end
       
       context "when all streams have activities from after subscribing" do
@@ -156,6 +162,7 @@ describe Joyce::Behaviour::Subscriber do
         it "should show activities from all streams" do
           subscriber.subscribed_activity_stream.should == [@new_activity, @old_activity]
         end
+        it { subscriber.subscriptions.should == [@thing_stream.owner, @person_stream.owner] }
         
         context "when unsubscribing" do
           before do
@@ -172,6 +179,8 @@ describe Joyce::Behaviour::Subscriber do
           it "should not show activities from after unsubscribing" do
             subscriber.subscribed_activity_stream.should_not include(@new_activity)
           end
+
+          it { subscriber.subscriptions.should == [] }
           
           context "when subscribing again" do
             before do
@@ -257,5 +266,12 @@ describe Joyce::Behaviour::Subscriber do
       it{ expect{ subscriber.subscribed_to?(Object.new) }.to raise_error ArgumentError }
     end
   end
-  
+
+  describe "#subscriptions" do
+    let(:model) { create(:thing) }
+    let(:another) { create(:person) }
+    before{ subscriber.subscribe_to(model) && subscriber.subscribe_to(another) }
+
+    it { subscriber.subscriptions.should == [model, another] }
+  end
 end
