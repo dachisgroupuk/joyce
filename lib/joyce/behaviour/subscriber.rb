@@ -7,7 +7,7 @@ module Joyce
     module Subscriber
       
       def self.included(base)
-        base.has_many :stream_subscriptions, :class_name => 'Joyce::StreamSubscriber', :as => :subscriber
+        base.has_many :stream_subscriptions, :class_name => 'Joyce::StreamSubscriber', :as => :subscriber, :include => :stream
       end
       
       def subscribe_to(producer)
@@ -42,6 +42,9 @@ module Joyce
         !stream_subscriptions.where(:stream_id => stream.id, :ended_at => nil).empty?
       end
 
+      def subscriptions(date_at = Time.now)
+        self.stream_subscriptions.map{|ss| ss.stream.owner if ss.active_at(date_at) }.compact
+      end
 
       private
 
