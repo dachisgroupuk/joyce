@@ -6,6 +6,7 @@ module Joyce
     
     belongs_to :owner, :polymorphic => true
     has_and_belongs_to_many :activities, :join_table => "joyce_activities_streams"
+    has_many :stream_subscribers, :dependent => :destroy
     
     validates_presence_of :owner_type
     

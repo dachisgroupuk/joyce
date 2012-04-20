@@ -66,4 +66,19 @@ describe Joyce::Stream do
     end
   end
   
+  describe "#destroy" do
+    let(:stream) { create(:stream) }
+    
+    context "with a subscriber" do
+      let(:subscriber) { create(:thing) }
+      before{ subscriber.subscribe_to(stream) }
+      
+      it "should destroy the subscription" do
+        expect{
+          stream.destroy
+        }.to change{ Joyce::StreamSubscriber.count }.by(-1)
+      end
+    end
+  end
+  
 end
