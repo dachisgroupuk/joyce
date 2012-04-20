@@ -292,4 +292,25 @@ describe Joyce::Behaviour::Subscriber do
 
     it { subscriber.subscriptions.should == [model, another] }
   end
+  
+  describe "#destroy" do
+    let(:stream) { create(:stream) }
+    
+    context "when subscribed" do
+      before{ subscriber.subscribe_to(stream) }
+      
+      it "should remove the subscription" do
+        expect{
+          subscriber.destroy
+        }.to change{ Joyce::StreamSubscriber.count }.by(-1)
+      end
+      
+      it "should preserve the stream" do
+        expect{
+          subscriber.destroy
+        }.not_to change { Joyce::Stream.count }
+      end
+    end
+  end
+  
 end

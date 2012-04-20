@@ -7,7 +7,7 @@ module Joyce
     module Subscriber
       
       def self.included(base)
-        base.has_many :stream_subscriptions, :class_name => 'Joyce::StreamSubscriber', :as => :subscriber, :include => :stream
+        base.has_many :stream_subscriptions, :class_name => 'Joyce::StreamSubscriber', :as => :subscriber, :include => :stream, :dependent => :destroy
       end
       
       def subscribe_to(producer)
