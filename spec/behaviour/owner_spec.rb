@@ -60,5 +60,19 @@ describe Joyce::Behaviour::Owner do
       end
     end
   end
+  
+  describe "#destroy" do
+    let(:owner) { create(:thing) }
+    
+    context "when the stream exists" do
+      before { @stream = Joyce::Stream.create(:owner => owner) }
+      
+      it "should destroy the stream" do
+        expect{
+          owner.destroy
+        }.to change{ Joyce::Stream.count }.by(-1)
+      end
+    end
+  end
 
 end
