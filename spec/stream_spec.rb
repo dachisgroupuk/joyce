@@ -68,6 +68,20 @@ describe Joyce::Stream do
   
   describe "#destroy" do
     let(:stream) { create(:stream) }
+    let(:owner) { stream.owner }
+    subject{ stream.destroy }
+    
+    it "should destroy the relationship with the owner" do
+      expect{
+        subject
+      }.to change{ owner.streams.count }.by(-1)
+    end
+    
+    it "should preserve the owner" do
+      expect{
+        subject
+      }.not_to change { owner.class.count }
+    end
     
     context "with a subscriber" do
       let(:subscriber) { create(:thing) }
@@ -75,8 +89,25 @@ describe Joyce::Stream do
       
       it "should destroy the subscription" do
         expect{
-          stream.destroy
+          subject
         }.to change{ Joyce::StreamSubscriber.count }.by(-1)
+      end
+    end
+    
+    context "with an activity" do
+      let(:activity) { create(:activity) }
+      before{ stream.activities << activity }
+      
+      it "should destroy the relationship" do
+        expect{
+          subject
+        }.to change{ activity.streams.count }.by(-1)
+      end
+      
+      it "should preserve the activity" do
+        expect{
+          subject
+        }.not_to change{ Joyce::Activity.count }
       end
     end
   end
