@@ -427,4 +427,24 @@ describe Joyce::Activity do
     end
   end
   
+  context "when the actor is destroyed" do
+    before{ @activity = create(:activity) }
+    
+    it "should destroy the activity" do
+      expect{
+        @activity.actor.destroy
+      }.to change{ Joyce::Activity.count }.by(-1)
+    end
+  end
+  
+  context "when the object is destroyed" do
+    before{ @activity = create(:activity, :obj => create(:thing)) }
+    
+    it "should destroy the activity" do
+      expect{
+        @activity.obj.destroy
+      }.to change{ Joyce::Activity.count }.by(-1)
+    end
+  end
+  
 end

@@ -8,6 +8,7 @@ module Joyce
       def acts_as_joyce
         include Joyce::Behaviour::Owner
         include Joyce::Behaviour::Subscriber
+        include Joyce::Behaviour::Entity
       end
     end
   end
