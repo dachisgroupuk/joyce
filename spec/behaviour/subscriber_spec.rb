@@ -293,6 +293,23 @@ describe Joyce::Behaviour::Subscriber do
     it { subscriber.subscriptions.should == [model, another] }
   end
   
+  describe "#typed_subscriptions" do
+    let(:thing) { create(:thing) }
+    let(:person) { create(:person) }
+    before do
+      subscriber.subscribe_to(thing)
+      subscriber.subscribe_to(person)
+    end
+    
+    it{ subscriber.typed_subscriptions(thing.class).should == [thing] }
+    
+    context "with an expired subscription" do
+      before { subscriber.unsubscribe_from(thing) }
+      
+      it{ subscriber.typed_subscriptions(thing.class).should be_empty }
+    end
+  end
+  
   describe "#destroy" do
     let(:stream) { create(:stream) }
     

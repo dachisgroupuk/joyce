@@ -45,6 +45,14 @@ module Joyce
       def subscriptions(date_at = Time.now)
         self.stream_subscriptions.active_at(date_at).map{|ss| ss.stream.owner }.compact
       end
+      
+      def typed_subscriptions(klass)
+        klass
+        .joins(:streams)
+        .joins('JOIN joyce_streams_subscribers AS jss ON jss.stream_id = joyce_streams.id')
+        .where('jss' => {:subscriber_id => self.id, :subscriber_type => self.class})
+        .where('jss.ended_at IS NULL')
+      end
 
       private
 
