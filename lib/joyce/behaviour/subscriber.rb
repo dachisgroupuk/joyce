@@ -43,7 +43,7 @@ module Joyce
       end
 
       def subscriptions(date_at = Time.now)
-        self.stream_subscriptions.map{|ss| ss.stream.owner if ss.active_at(date_at) }.compact
+        self.stream_subscriptions.active_at(date_at).map{|ss| ss.stream.owner }.compact
       end
 
       private
