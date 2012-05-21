@@ -74,5 +74,41 @@ describe Joyce::Behaviour::Owner do
       end
     end
   end
+  
+  describe ".subscribed_by" do
+    let(:owner) { create(:thing) }
+    let(:subscriber) { create(:person) }
+    
+    context "with no subscribers" do
+      it{ owner.class.subscribed_by(subscriber).should be_empty }
+    end
+    
+    context "with a subscriber" do
+      before{ subscriber.subscribe_to(owner) }
+      
+      it{ owner.class.subscribed_by(subscriber).should == [owner] }
+      
+      context "when not subscribed anymore" do
+        before{ subscriber.unsubscribe_from(owner) }
+        
+        it{ owner.class.subscribed_by(subscriber).should == [owner] }
+      end
+    end
+  end
+  
+  describe ".currently_subscribed_by" do
+    let(:owner) { create(:thing) }
+    let(:subscriber) { create(:person) }
+    
+    context "with a subscriber" do
+      before{ subscriber.subscribe_to(owner) }
+      
+      context "when not subscribed anymore" do
+        before{ subscriber.unsubscribe_from(owner) }
+        
+        it{ owner.class.currently_subscribed_by(subscriber).should be_empty }
+      end
+    end
+  end
 
 end
