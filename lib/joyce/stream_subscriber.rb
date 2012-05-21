@@ -16,6 +16,11 @@ module Joyce
         .where('ended_at IS NULL OR ended_at >= ?', inspection_date)
       end
       
+      def subscribed_by(subscriber)
+        where(:subscriber_id => subscriber.id)
+        .where(:subscriber_type => subscriber.class.to_s)
+      end
+      
     end
     extend Scopes
   end
