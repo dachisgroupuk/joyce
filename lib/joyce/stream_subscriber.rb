@@ -15,6 +15,7 @@ module Joyce
         where('started_at <= ?', inspection_date)
         .where('ended_at IS NULL OR ended_at >= ?', inspection_date)
       end
+      alias_method :active, :active_at
       
       def subscribed_by(subscriber)
         where(:subscriber_id => subscriber.id)
