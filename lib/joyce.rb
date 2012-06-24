@@ -20,6 +20,25 @@ module Joyce
   extend ActiveModel::Observing::ClassMethods
   extend ActiveSupport::DescendantsTracker
   
+  # Publishes a new activity.
+  # By default, this publishes the activity to each one of the arguments' streams (unless an `:only` argument is specified).
+  # 
+  # In case a Stream does not exist for one of the arguments, one will be automatically created.
+  # 
+  # Before returning, the method will call an `:after_publish` callback that observers can hook up to.
+  # 
+  # @example publish an activity such as *Jane added a comment to a post*
+  #   Joyce.publish_activity(:actor => jane, :verb => Added, :obj => comment, :target => post)
+  # @example publish an activity such as *Jane added a comment to a post in a group*, with named targets
+  #   Joyce.publish_activity(:actor => jane, :verb => Added, :obj => comment, :post => post, :group => group)
+  # 
+  # @param [Hash] args the arguments for the activity.
+  # @option args [Behaviour::Owner] :actor the activity actor.
+  # @option args [Verb] :verb the activity verb.
+  # @option args [Behaviour::Owner] :obj the activity object (optional).
+  # @option args [Behaviour::Owner] :target the activity target (optional). Any argument that is not using a reserved word (`:actor`, `:verb` etc.) will be considered a named target. See example above.
+  # @option args [Array] :only the list of streams the activity will be added to (optional). Example: `:only => [:actor, :verb]`.
+  # @return [Activity] the published activity.
   def self.publish_activity(args)
     raise ArgumentError.new("An actor must be specified for the Activity") unless args[:actor]
     raise ArgumentError.new("A verb must be specified for the Activity") unless args[:verb]

@@ -119,6 +119,22 @@ The targets can then be retrieved with:
 
     activity.get_targets(:groups) # => will return [groupA, groupB]
 
+### Subscriptions
+
+Once a model has been enabled by specifying `acts_as_joyce`, it will be able to subscribe to streams (or, more interestingly, stream owners).
+
+E.g. supposing john and jane are instances of joyce-enabled models, it will be possible to do:
+
+        john.subscribe_to(jane)
+
+The following code will then return all activities from the subscribed streams:
+
+        john.subscribed_activity_stream
+
+Note that the return value for the `activity_stream` method and for the `subscribed_activity_stream` method has the same format (an array of `Activity` instances). The difference is in which activities are returned.
+
+In the example above, `subscribed_activity_stream` will return jane's activities, while `activity_stream` will return john's activities.
+
 
 ## Testing
 

@@ -14,10 +14,16 @@ module Joyce
     extend Joyce::Scopes
     default_scope order("joyce_activities.created_at DESC")
     
+    # Returns an array of targets for the given name.
+    # 
+    # @return [Array] the targets for the given name.
     def get_targets(name=:target)
       ActivityTarget.where(:name => name, :activity_id => id).map{ |at| at.target }
     end
     
+    # Sets the activity targets.
+    # 
+    # @param [Hash] targets a Hash of type `{ :name => target }`.
     def set_targets(targets)
       raise ArgumentError.new("Parameter for set_targets should be a hash of type {:name => target}") unless targets.is_a?(Hash)
       
@@ -42,6 +48,7 @@ module Joyce
       verb_value.nil? ? nil : verb_value.constantize
     end
     
+    # Returns subscribers for this activity.
     def subscribers
       subscriptions = Joyce::StreamSubscriber
         .joins("JOIN joyce_activities_streams AS jas ON joyce_streams_subscribers.stream_id = jas.stream_id")

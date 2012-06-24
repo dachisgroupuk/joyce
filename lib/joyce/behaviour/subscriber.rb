@@ -10,6 +10,10 @@ module Joyce
         base.has_many :stream_subscriptions, :class_name => 'Joyce::StreamSubscriber', :as => :subscriber, :include => :stream, :dependent => :destroy
       end
       
+      # Subscribes to a stream or a stream owner.
+      # If the parameter is a stream owner, the method will subscribe to the associated stream.
+      # 
+      # @param producer [Stream, Behaviour::Owner] the activity producer to subscribe to.
       def subscribe_to(producer)
         stream = stream_from_producer(producer)
         raise DuplicateSubscriptionError.new("An open subscription to #{producer} already exists") unless stream_subscriptions.where(:stream_id => stream.id, :ended_at => nil).empty?
@@ -17,6 +21,10 @@ module Joyce
         Joyce::StreamSubscriber.create(:subscriber => self, :stream => stream, :started_at => Time.now)
       end
       
+      # Unsubscribes from a stream or a stream owner.
+      # If the parameter is a stream owner, the method will unsubscribe from the associated stream.
+      # 
+      # @param producer [Stream, Behaviour::Owner] the activity producer to unsubscribe from.
       def unsubscribe_from(producer)
         stream = stream_from_producer(producer)
         stream_subscriber = stream_subscriptions.where(:stream_id => stream.id, :ended_at => nil).first
@@ -26,6 +34,7 @@ module Joyce
         stream_subscriber.save
       end
       
+      # Returns all activities for the subscribed streams.
       def subscribed_activity_stream
         Joyce::Activity
           .joins("JOIN joyce_activities_streams AS jas ON joyce_activities.id = jas.activity_id")
@@ -37,15 +46,33 @@ module Joyce
           .uniq
       end
       
+      # Returns whether the instance is subscribed to a stream or a stream owner.
+      # 
+      # @param producer [Stream, Behaviour::Owner] the activity producer to check subscription against.
+      # @return [Boolean]
       def subscribed_to?(producer)
         stream = stream_from_producer(producer)
         !stream_subscriptions.where(:stream_id => stream.id, :ended_at => nil).empty?
       end
-
+      
+      # Returns all active subscriptions.
+      # If the parameter is passed, return the subscriptions that were active at that time.
+      # 
+      # @param date_at [Time]
       def subscriptions(date_at = Time.now)
         self.stream_subscriptions.active_at(date_at).map{|ss| ss.stream.owner }.compact
       end
       
+      # Returns only subscriptions that are instances of the class passed as a parameter.
+      # 
+      # @example
+      #   john = User.create(:name => 'john')
+      #   jane = User.create(:name => 'jane')
+      #   blog = Blog.create
+      #   john.subscribe_to(jane)
+      #   john.subscribe_to(blog)
+      # 
+      #   john.typed_subscriptions(User) # => [jane]
       def typed_subscriptions(klass)
         klass
         .joins(:streams)

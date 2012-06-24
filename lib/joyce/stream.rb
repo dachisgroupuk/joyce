@@ -14,6 +14,11 @@ module Joyce
       new params
     end
     
+    # Returns the stream belonging to the specified owner.
+    # If a stream does not exist for the owner, one will be created.
+    # 
+    # @param owner [Behaviour::Owner] the stream owner.
+    # @return [Stream]
     def self.find_or_create_by_owner(owner)
       if owner.is_a?(Class)
         args = { :owner_type => owner.to_s }
@@ -29,6 +34,13 @@ module Joyce
       end
     end
     
+    # Returns the stream belonging to the specified verb.
+    # If a stream does not exist for the verb, one will be created.
+    # 
+    # Note that a verb is considered a stream owner.
+    # 
+    # @param owner [Verb] the verb owning the stream.
+    # @return [Stream]
     def self.find_or_create_by_verb(verb)
       stream = where(:owner_type => verb.to_s).first
       if stream.nil?

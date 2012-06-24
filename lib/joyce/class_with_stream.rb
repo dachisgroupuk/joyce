@@ -1,6 +1,7 @@
 module Joyce
   
   module ClassWithStream
+    # Returns all the activities in the instance stream.
     def activity_stream
       Joyce::Activity
         .joins("JOIN joyce_activities_streams AS jas ON joyce_activities.id = jas.activity_id")
