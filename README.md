@@ -143,6 +143,11 @@ Execute:
     $ rspec
 
 
+## Documentation
+
+Documentation can be generated using YARD, or browsed online on [rubydoc.info](http://rubydoc.info/github/headshift/joyce/master/frames).
+
+
 ## Contributing
 
 1. Fork it
